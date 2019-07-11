@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "../../3rdParty/opencv331/install/include",
+                "../../3rdParty/eigen334/install/include/eigen3",
+                "/usr/include/boost",
+                "/usr/include/pcl-1.7"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}
