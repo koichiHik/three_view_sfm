@@ -11,6 +11,10 @@
 // OpenCV
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/xfeatures2d/cuda.hpp>
+
+using namespace std;
 
 DEFINE_string(first_pic, "./data/0003.jpg", "");
 DEFINE_string(second_pic, "./data/0005.jpg", "");
@@ -25,14 +29,60 @@ void ScaleAndShowImage(const double scale, const cv::Mat &img,
   cv::waitKey(wait_time);
 }
 
-int main(int argc, char **argv) {
-
-  // 0. System Setup
+void SystemSetup(int argc, char **argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
   FLAGS_alsologtostderr = 1;
   FLAGS_stderrthreshold = google::GLOG_INFO;
   google::InitGoogleLogging(argv[0]);
+}
 
+void PrepareData() {}
+
+void ExtractSIFTFeature() {
+  cv::Mat image;
+  cv::Mat descriptors;
+  vector<cv::KeyPoint> key_points;
+  cv::xfeatures2d::SiftDescriptorExtractor extractor;
+  extractor.detectAndCompute(image, cv::Mat(), key_points, descriptors);
+}
+
+void MatchFeature() {}
+
+void ComputeFundamentalMatrix() {}
+
+void GeneratePointCloud() {}
+
+void ComputePoseViaPNP() {}
+
+void VisualizeResult() {}
+
+int main(int argc, char **argv) {
+
+  // 0. System Setup
+  SystemSetup(argc, argv);
+
+  // 1. Preparation
+  PrepareData();
+
+  // X. Feature Extraction
+  ExtractSIFTFeature();
+
+  // X. Feature Matching
+  MatchFeature();
+
+  // X. Compute Fundamental Matrix and Decide Scale.
+  ComputeFundamentalMatrix();
+
+  // X. Generate Point Cloud from Epipolar Geometry.
+  GeneratePointCloud();
+
+  // X. Compute Pose Via PNP
+  ComputePoseViaPNP();
+
+  // X. Add Third View via PNP.
+  GeneratePointCloud();
+
+  // X. Final Result Visualization.
   cv::Mat mat = cv::imread(FLAGS_first_pic, cv::IMREAD_UNCHANGED);
   ScaleAndShowImage(FLAGS_vis_scale, mat, 0);
 
