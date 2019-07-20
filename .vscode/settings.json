@@ -48,6 +48,7 @@
     "utility": "cpp",
     "csignal": "cpp",
     "cstdarg": "cpp",
-    "bitset": "cpp"
+    "bitset": "cpp",
+    "string": "cpp"
   }
 }

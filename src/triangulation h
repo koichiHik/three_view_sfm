@@ -1,0 +1,25 @@
+
+#ifndef TRIANGULATION_H
+#define TRIANGULATION_H
+
+// STL
+#include <vector>
+
+// OpenCV
+#include <opencv2/core.hpp>
+
+namespace three_view_sfm {
+
+bool TriangulatePoint(
+    const cv::Matx33d &K, const cv::Matx34d &Porigin, const cv::Matx34d &P,
+    const cv::Point2f &point0, const cv::Point2f &point1,
+    std::pair<cv::Point3d, double> &triangulated_point_with_err);
+
+bool TriangulatePoints(
+    const cv::Matx33d &K, const cv::Matx34d &Porigin, const cv::Matx34d &P,
+    const std::vector<cv::Point2f> &aligned_points0,
+    const std::vector<cv::Point2f> &aligned_points1,
+    std::vector<std::pair<cv::Point3d, double>> &triangulated_points_with_err);
+}
+
+#endif // TRIANGULATION_H

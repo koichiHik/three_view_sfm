@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ROOT_3RD=~/workspace/3rdParty
-CMAKE_BUILD_TYPE=Release
+CMAKE_BUILD_TYPE=Debug
 OpenCV_DIR_RELEASE=${ROOT_3RD}/opencv331/install/share/
 Eigen3_DIR=${ROOT_3RD}/eigen337/install/share/eigen3/cmake/
 
