@@ -8,9 +8,11 @@ set(CMAKE_CXX_STANDARD 14)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin )
 
 # Necessary Libraries.
-find_package(Eigen3 REQUIRED CONFIG PATHS ${Eigen3_DIR} NO_DEFAULT_PATH)
+# find_package(Eigen3 REQUIRED CONFIG PATHS ${Eigen3_DIR} NO_DEFAULT_PATH)
+find_package(Eigen3)
 find_package(PCL 1.7 REQUIRED)
-find_package(OpenCV REQUIRED CONFIG PATHS ${OpenCV_DIR} NO_DEFAULT_PATH)
+# find_package(OpenCV REQUIRED CONFIG PATHS ${OpenCV_DIR} NO_DEFAULT_PATH)
+find_package(OpenCV)
 find_package(VTK REQUIRED)
 find_package(Boost COMPONENTS filesystem program_options)
 
