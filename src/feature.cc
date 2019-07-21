@@ -56,7 +56,7 @@ vector<cv::DMatch> FlipMatches(vector<cv::DMatch> &matches) {
 }
 
 void MatchFeature(Database &database) {
-  cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create();
+  cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create(cv::NORM_L2, true);
   int image_num = database.GetViews().size();
   for (int query_idx = 0; query_idx < image_num; query_idx++) {
     for (int train_idx = 0; train_idx < image_num; train_idx++) {
