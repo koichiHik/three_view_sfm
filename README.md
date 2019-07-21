@@ -29,5 +29,6 @@ cd ..
 git clone git@github.com:openMVG/SfM_quality_evaluation.git SfM_quality_evaluation
 
 #### Run command
+##### 1. Run sfm for fountain-P11 data.
 cd three_view_sfm
 ./build/bin/three_view_sfm --directory=../SfM_quality_evaluation/Benchmarking_Camera_Calibration_2008/fountain-P11/images/
