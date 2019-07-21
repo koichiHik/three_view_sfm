@@ -39,9 +39,9 @@ Eigen::Matrix<float, 6, 1> EigenToEigen(Eigen::Vector3d v,
       .finished();
 }
 
-vector<Eigen::Matrix<float, 6, 1>> ToVector(
-    const Eigen::Matrix<float, 6, 1>& p1,
-    const Eigen::Matrix<float, 6, 1>& p2) {
+vector<Eigen::Matrix<float, 6, 1>>
+ToVector(const Eigen::Matrix<float, 6, 1> &p1,
+         const Eigen::Matrix<float, 6, 1> &p2) {
   std::vector<Eigen::Matrix<float, 6, 1>> v(2);
   v[0] = p1;
   v[1] = p2;
@@ -49,8 +49,8 @@ vector<Eigen::Matrix<float, 6, 1>> ToVector(
 }
 
 void ConvertCloudPointsToPclPointCloud(
-    const vector<CloudPoint>& cloud_points,
-    pcl::PointCloud<pcl::PointXYZRGB>& pcl_point_cloud) {
+    const vector<CloudPoint> &cloud_points,
+    pcl::PointCloud<pcl::PointXYZRGB> &pcl_point_cloud) {
   // X. Erase all points.
   pcl_point_cloud.clear();
 
@@ -64,10 +64,10 @@ void ConvertCloudPointsToPclPointCloud(
 }
 
 void ComposeCameraElement(
-    const cv::Matx34d& pose, const std::string& name, float r, float g, float b,
-    vector<std::pair<std::string, pcl::PolygonMesh>>& cam_meshes,
-    vector<std::pair<std::string, std::vector<Eigen::Matrix<float, 6, 1>>>>&
-        lines_to_draw,
+    const cv::Matx34d &pose, const std::string &name, float r, float g, float b,
+    vector<std::pair<std::string, pcl::PolygonMesh>> &cam_meshes,
+    vector<std::pair<std::string, std::vector<Eigen::Matrix<float, 6, 1>>>>
+        &lines_to_draw,
     double s) {
   // Confirm name is not empty.
   assert(name.length() > 0);
@@ -121,9 +121,9 @@ void ComposeCameraElement(
 }
 
 void ComposeCameraElements(
-    const vector<pair<int, cv::Matx34d>>& cam_poses,
-    vector<pair<string, pcl::PolygonMesh>>& cam_meshes,
-    vector<pair<string, vector<Eigen::Matrix<float, 6, 1>>>>& lines_to_draw) {
+    const vector<pair<int, cv::Matx34d>> &cam_poses,
+    vector<pair<string, pcl::PolygonMesh>> &cam_meshes,
+    vector<pair<string, vector<Eigen::Matrix<float, 6, 1>>>> &lines_to_draw) {
   for (auto pair : cam_poses) {
     std::stringstream ss;
     ss << "Camera" << to_string(pair.first);
@@ -133,18 +133,16 @@ void ComposeCameraElements(
   }
 }
 
-}  // namespace
+} // namespace
 
 namespace three_view_sfm {
 
 class PCLViewerInternalStorage {
- public:
+public:
   PCLViewerInternalStorage()
       : m_p_vis_thread(nullptr),
         m_pcl_point_cloud(new pcl::PointCloud<pcl::PointXYZRGB>()),
-        m_window_name("Point Cloud Viewer"),
-        m_quit(false),
-        m_updated(false) {}
+        m_window_name("Point Cloud Viewer"), m_quit(false), m_updated(false) {}
 
   // Vis Thread.
   std::unique_ptr<std::thread> m_p_vis_thread;
@@ -160,9 +158,10 @@ class PCLViewerInternalStorage {
 };
 
 struct PCLViewerHandler {
-  static void KeyBoardEventHandler(
-      const pcl::visualization::KeyboardEvent& event, void* PCLViewer_void) {
-    PCLViewer* p_pcl_viewer = static_cast<PCLViewer*>(PCLViewer_void);
+  static void
+  KeyBoardEventHandler(const pcl::visualization::KeyboardEvent &event,
+                       void *PCLViewer_void) {
+    PCLViewer *p_pcl_viewer = static_cast<PCLViewer *>(PCLViewer_void);
     std::string key = event.getKeySym();
     if (key == "Escape" && event.keyDown()) {
       p_pcl_viewer->m_intl->m_quit = true;
@@ -170,15 +169,15 @@ struct PCLViewerHandler {
   }
 };
 
-PCLViewer::PCLViewer(const string& window_name)
+PCLViewer::PCLViewer(const string &window_name)
     : m_intl(new PCLViewerInternalStorage()) {
   m_intl->m_window_name = window_name;
 }
 
 PCLViewer::~PCLViewer() {}
 
-void PCLViewer::Update(const vector<CloudPoint>& point_cloud,
-                       const vector<pair<int, cv::Matx34d>>& cameras) {
+void PCLViewer::Update(const vector<CloudPoint> &point_cloud,
+                       const vector<pair<int, cv::Matx34d>> &cameras) {
   LOG(INFO) << "Num of Points : " << point_cloud.size();
   ConvertCloudPointsToPclPointCloud(point_cloud, *m_intl->m_pcl_point_cloud);
   ComposeCameraElements(cameras, m_intl->m_cam_meshes, m_intl->m_lines_to_draw);
@@ -197,7 +196,7 @@ void PCLViewer::RunVisualization() {
   pcl::visualization::PCLVisualizer visualizer(m_intl->m_window_name);
 
   visualizer.registerKeyboardCallback(PCLViewerHandler::KeyBoardEventHandler,
-                                      static_cast<void*>(this));
+                                      static_cast<void *>(this));
 
   while (!visualizer.wasStopped()) {
     if (m_intl->m_quit) {
@@ -208,6 +207,8 @@ void PCLViewer::RunVisualization() {
       // X. Remove all points drawn already.
       visualizer.removePointCloud("Orig");
       visualizer.addPointCloud(m_intl->m_pcl_point_cloud, "Orig");
+      visualizer.setPointCloudRenderingProperties(
+          pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "Orig");
 
       for (int i = 0; i < m_intl->m_cam_meshes.size(); i++) {
         visualizer.removeShape(m_intl->m_cam_meshes[i].first);
@@ -221,4 +222,4 @@ void PCLViewer::RunVisualization() {
   }
 }
 
-}  // namespace three_view_sfm
+} // namespace three_view_sfm
