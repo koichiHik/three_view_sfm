@@ -205,20 +205,20 @@ int main(int argc, char **argv) {
 
   // Step 11. Loop for all remaining views.
   while (db.status.processed_view.size() != db.GetViews().size()) {
-    // Step 12. Compute Pose Via PNP
+    // Step 11.1 Compute Pose Via PNP
     StructureFromMotionViaPNP(db);
 
-    // Step13. Bundle Adjust
+    // Step 11.2 Bundle Adjust
     BundleAdjust(db);
 
-    // Step 15. Generate Point Cloud from Epipolar Geometry.
+    // Step 11.3 Visualize Generated Point Cloud and Camera Poses.
     pcl_viewer.Update(GenerateCloudPointVectorFromMap(db.GetCloudPoints()),
                       GenerateRecoveredPoseVector(db));
 
-    // Step 16. Sleep for visualization.
+    // Step 11.4 Sleep for visualization.
     std::this_thread::sleep_for(std::chrono::seconds(5));
   }
-  // Step 17. Wait till thread joins.
+  // Step 12. Wait till thread joins.
   pcl_viewer.WaitVisThread();
 
   return 0;
