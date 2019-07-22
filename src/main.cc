@@ -167,58 +167,58 @@ vector<pair<int, cv::Matx34d>> GenerateRecoveredPoseVector(Database &database) {
 }
 
 int main(int argc, char **argv) {
-  // 0. System Setup
+  // Step 0. System Setup
   SystemSetup(argc, argv);
 
-  // 1. Data Preparation
+  // Step 1. Data Preparation
   Database db;
   LoadData(FLAGS_directory, FLAGS_k_mat_file, FLAGS_scale, db);
 
-  // X. Prepare PCL Viewer.
+  // Step 2. Prepare PCL Viewer.
   PCLViewer pcl_viewer("Sfm Result");
   pcl_viewer.RunVisualizationAsync();
 
-  // X. Feature Extraction
+  // Step 3. Feature Extraction
   ExtractSIFTFeature(FLAGS_num_features, db);
 
-  // X. Feature Matching
+  // Step 4. Feature Matching
   MatchFeature(db);
 
-  // X. Filter by Funcatmental Matrix Calculation.
+  // Step 5. Filter by Funcatmental Matrix Calculation.
   FilterMatchedFeatureViaGeometricConstraints(db);
 
-  // X. Visualize Matching Result
+  // Step 6. Visualize Matching Result
   VisualizeMatchingResult(0, db);
 
-  // X. Compute Fundamental Matrix and Decide Scale.
+  // Step 7. Compute Fundamental Matrix and Decide Scale.
   StructureFromMotionViaTwoViewGeometry(db);
 
-  // X. Bundle Adjust
+  // Step 8. Bundle Adjust
   BundleAdjust(db);
 
-  // X. Visualizew Two View Pose.
+  // Step 9. Visualizew Two View Pose.
   pcl_viewer.Update(GenerateCloudPointVectorFromMap(db.GetCloudPoints()),
                     GenerateRecoveredPoseVector(db));
 
-  // X. Sleep for visualization.
+  // Step 10. Sleep for visualization.
   std::this_thread::sleep_for(std::chrono::seconds(5));
 
-  // X. Loop for all remaining views.
+  // Step 11. Loop for all remaining views.
   while (db.status.processed_view.size() != db.GetViews().size()) {
-    // X. Compute Pose Via PNP
+    // Step 12. Compute Pose Via PNP
     StructureFromMotionViaPNP(db);
 
-    // X. Bundle Adjust
+    // Step13. Bundle Adjust
     BundleAdjust(db);
 
-    // X. Generate Point Cloud from Epipolar Geometry.
+    // Step 15. Generate Point Cloud from Epipolar Geometry.
     pcl_viewer.Update(GenerateCloudPointVectorFromMap(db.GetCloudPoints()),
                       GenerateRecoveredPoseVector(db));
 
-    // X. Sleep for visualization.
+    // Step 16. Sleep for visualization.
     std::this_thread::sleep_for(std::chrono::seconds(5));
   }
-  // X. Wait till thread joins.
+  // Step 17. Wait till thread joins.
   pcl_viewer.WaitVisThread();
 
   return 0;
